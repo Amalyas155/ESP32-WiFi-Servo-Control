@@ -144,7 +144,7 @@ The `ESP32Servo` library can be installed from:
 * `code.ino` — ESP32 source code.
 * `diagram.json` — Wokwi circuit design.
 * `libraries.txt` — Required Wokwi libraries.
-* `wokwi-project.txt` — Wokwi project information.
+* `sketch.ino` — Wokwi simulation code.
 * `README.md` — Project documentation.
 
 ## ✅ Project Result
