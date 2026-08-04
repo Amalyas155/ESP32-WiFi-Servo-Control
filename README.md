@@ -1,4 +1,3 @@
-
 # 🌐 ESP32 WiFi Servo Control
 
 ## 📌 Project Overview
@@ -16,7 +15,7 @@ The project was first tested virtually using the **Wokwi simulator** and then im
 * 🔓 Open button moves the Servo Motor to 90°.
 * 🔒 Close button returns the Servo Motor to 0°.
 * 🔵 Blue LED indicates the Open state.
-* 🔴 Red LED indicates the Close state in the simulation.
+* 🔴 Red LED indicates the Close state.
 * 📱 Can be controlled using a phone or computer.
 * 💻 Tested using Wokwi and real hardware.
 
@@ -33,31 +32,40 @@ The project was first tested virtually using the **Wokwi simulator** and then im
 
 ### 🔌 Real Hardware
 
-* ESP32 Board
+* ESP32 MINI32 Board
 * SG90 Servo Motor
+* Blue LED
+* Red LED
+* Two 220Ω resistors
 * Male-to-Male jumper wires
+* Breadboard
 * USB data cable
-* Built-in blue LED on the ESP32
 
 ## 🔗 Wokwi Wiring
 
-| Component    | ESP32 Connection                |
-| ------------ | ------------------------------- |
-| Servo signal | GPIO 18                         |
-| Servo VCC    | 5V                              |
-| Servo GND    | GND                             |
-| Blue LED     | GPIO 2 through a 220Ω resistor  |
-| Red LED      | GPIO 27 through a 220Ω resistor |
+| Component          | ESP32 Connection                |
+| ------------------ | ------------------------------- |
+| Servo signal       | GPIO 18                         |
+| Servo VCC          | 5V                              |
+| Servo GND          | GND                             |
+| Blue LED long leg  | GPIO 2 through a 220Ω resistor  |
+| Blue LED short leg | GND                             |
+| Red LED long leg   | GPIO 27 through a 220Ω resistor |
+| Red LED short leg  | GND                             |
 
 ## 🔧 Real Hardware Wiring
 
-| Servo Wire  | ESP32 Connection | Function             |
-| ----------- | ---------------- | -------------------- |
-| Red wire    | VCC              | Servo power          |
-| Brown wire  | GND              | Ground               |
-| Orange wire | IO18             | Servo control signal |
+| Component          | ESP32 Connection             | Function             |
+| ------------------ | ---------------------------- | -------------------- |
+| Servo red wire     | VCC                          | Servo power          |
+| Servo brown wire   | GND                          | Ground               |
+| Servo orange wire  | IO18                         | Servo control signal |
+| Blue LED long leg  | IO22 through a 220Ω resistor | Open indicator       |
+| Blue LED short leg | GND                          | Ground               |
+| Red LED long leg   | IO23 through a 220Ω resistor | Close indicator      |
+| Red LED short leg  | GND                          | Ground               |
 
-The built-in blue LED uses `GPIO 2`, so it does not require any external wiring.
+> The physical ESP32 board uses `IO22` and `IO23` for the external LEDs because these pins are available on the soldered header row.
 
 > ⚠️ Disconnect the USB cable before connecting or changing any wires.
 
@@ -67,15 +75,14 @@ The built-in blue LED uses `GPIO 2`, so it does not require any external wiring.
 2. The user connects a phone or computer to the ESP32 network.
 3. The user opens `http://192.168.4.1` in a browser.
 4. The ESP32 displays a web page with Open and Close buttons.
-5. Pressing **Open** moves the Servo Motor to 90° and turns on the blue LED.
-6. Pressing **Close** returns the Servo Motor to 0° and turns off the blue LED.
-7. In the Wokwi simulation, the red LED turns on during the Close state.
+5. Pressing **Open** moves the Servo Motor to 90°, turns on the blue LED, and turns off the red LED.
+6. Pressing **Close** returns the Servo Motor to 0°, turns off the blue LED, and turns on the red LED.
 
 ## 🌐 Wokwi Simulation
 
 The circuit and code were first tested virtually using the Wokwi simulator.
 
-https://wokwi.com/projects/471183592177360897
+[🔗 Open the Wokwi Simulation](https://wokwi.com/projects/471183592177360897)
 
 ### 🎥 Wokwi Simulation Run
 
@@ -90,15 +97,18 @@ In the simulation, the Servo Motor can also be controlled using the Serial Monit
 
 ## 🛠️ Real Hardware Implementation
 
-After successfully testing the circuit in Wokwi, the project was implemented using a real ESP32 board and an SG90 Servo Motor.
+After successfully testing the circuit in Wokwi, the project was implemented using a real ESP32 board, an SG90 Servo Motor, and two external LEDs.
 
-The built-in blue LED on the ESP32 was used as the Open status indicator.
+The blue LED was connected to `IO22` to indicate the Open state, while the red LED was connected to `IO23` to indicate the Close state. The Servo Motor signal wire was connected to `IO18`.
 
 ### 🎥 Real Hardware Run
 
-Here we show the project running using the real ESP32 board and SG90 Servo Motor.
+Here we show the project running using the real ESP32 board, SG90 Servo Motor, and external LEDs.
 
-https://github.com/user-attachments/assets/c3a07d44-d359-4a9b-bf23-f335bde9ccf2
+
+https://github.com/user-attachments/assets/cd7f3065-616e-406a-9a0c-4bcfefcb83a8
+
+
 
 ## 💻 Software and Libraries
 
@@ -120,7 +130,7 @@ The `ESP32Servo` library can be installed from:
 
 1. Disconnect the Servo Motor from the ESP32.
 2. Connect the ESP32 to the computer using a USB data cable.
-3. Open the project code in the Arduino IDE.
+3. Open the real hardware code in the Arduino IDE.
 4. Select `ESP32 Dev Module` from the Boards menu.
 5. Select the correct COM port.
 6. Set the Upload Speed to `115200`.
@@ -135,23 +145,24 @@ The `ESP32Servo` library can be installed from:
 1. Power the ESP32 using the USB cable.
 2. Open the WiFi settings on the phone or computer.
 3. Connect to the WiFi network created by the ESP32.
-4. Open a web browser.
-5. Enter `http://192.168.4.1`.
-6. Press Open or Close to control the Servo Motor.
+4. If the device displays **No Internet**, remain connected to the ESP32 network.
+5. Open a web browser.
+6. Enter `http://192.168.4.1`.
+7. Press **Open** or **Close** to control the Servo Motor and LEDs.
 
 ## 📁 Repository Files
 
-* `code.ino` — ESP32 source code.
+* `code.ino` — Real hardware code using IO18, IO22, and IO23.
+* `sketch.ino` — Wokwi simulation code.
 * `diagram.json` — Wokwi circuit design.
 * `libraries.txt` — Required Wokwi libraries.
-* `sketch.ino` — Wokwi simulation code.
 * `README.md` — Project documentation.
 
 ## ✅ Project Result
 
 The project was successfully tested in the Wokwi simulator and implemented using real ESP32 hardware.
 
-The ESP32 successfully created a local WiFi network, displayed the web control page, and controlled the Servo Motor using the Open and Close buttons.
+The ESP32 successfully created a local WiFi network, displayed the web control page, controlled the Servo Motor, and changed the LED indicators according to the selected Open or Close state.
 
 ---
 
