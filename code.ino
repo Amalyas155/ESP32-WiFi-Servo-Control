@@ -2,16 +2,19 @@
 #include <WebServer.h>
 #include <ESP32Servo.h>
 
+// WiFi information
 const char* ssid = "ESP32-Servo";
 const char* password = "12345678";
 
+// Pins
 const int servoPin = 18;
-const int redLED = 27;
-const int blueLED = 2;
+const int blueLED = 22;
+const int redLED = 23;
 
 Servo myServo;
 WebServer server(80);
 
+// Open
 void openServo() {
   myServo.write(90);
 
@@ -21,15 +24,17 @@ void openServo() {
   Serial.println("Servo OPEN");
 }
 
+// Close
 void closeServo() {
   myServo.write(0);
 
   digitalWrite(blueLED, LOW);
   digitalWrite(redLED, HIGH);
 
-  Serial.println("Servo CLOSE");
+  Serial.println("Servo CLOSED");
 }
 
+// Web page
 void showPage() {
   String page = R"rawliteral(
 <!DOCTYPE html>
@@ -45,10 +50,6 @@ void showPage() {
       padding-top: 70px;
     }
 
-    h1 {
-      color: #333;
-    }
-
     button {
       width: 180px;
       padding: 18px;
@@ -60,11 +61,11 @@ void showPage() {
     }
 
     .open {
-      background: #2196f3;
+      background: #2196F3;
     }
 
     .close {
-      background: #e53935;
+      background: #E53935;
     }
   </style>
 </head>
@@ -101,8 +102,8 @@ void handleClose() {
 void setup() {
   Serial.begin(115200);
 
-  pinMode(redLED, OUTPUT);
   pinMode(blueLED, OUTPUT);
+  pinMode(redLED, OUTPUT);
 
   myServo.setPeriodHertz(50);
   myServo.attach(servoPin, 500, 2400);
@@ -115,17 +116,25 @@ void setup() {
   server.on("/", showPage);
   server.on("/open", handleOpen);
   server.on("/close", handleClose);
-
   server.begin();
 
-  Serial.println("Access Point started");
-  Serial.println("WiFi name: ESP32-Servo");
-  Serial.println("Password: 12345678");
-  Serial.print("IP address: ");
-  Serial.println(WiFi.softAPIP());
-  Serial.println("Web server started");
+  Serial.println("WiFi started");
+  Serial.println("Open: http://192.168.4.1");
 }
 
 void loop() {
   server.handleClient();
+
+  // Control from Serial Monitor
+  if (Serial.available()) {
+    char command = Serial.read();
+
+    if (command == 'O' || command == 'o') {
+      openServo();
+    }
+
+    if (command == 'C' || command == 'c') {
+      closeServo();
+    }
+  }
 }
